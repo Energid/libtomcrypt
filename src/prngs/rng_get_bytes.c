@@ -144,7 +144,7 @@ unsigned long rng_get_bytes(unsigned char *out, unsigned long outlen,
 #ifndef NO_WINCRYPT
 #if defined(_WIN32) || defined(_WIN32_WCE)
    x = _rng_win32(out, outlen, callback); if (x != 0) { return x; }
-#elif defined(LTC_DEVRANDOM)
+#elif (defined(LTC_DEVRANDOM) && !defined(_WIN32))
    x = _rng_nix(out, outlen, callback);   if (x != 0) { return x; }
 #endif
 #endif // NO_WINCRYPT
