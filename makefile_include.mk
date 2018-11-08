@@ -80,7 +80,10 @@ endef
 # by giving them as a parameter to make:
 #  make CFLAGS="-I./src/headers/ -DLTC_SOURCE ..." ...
 #
-LTC_CFLAGS += -I./src/headers/ -Wall -Wsign-compare -Wshadow -DLTC_SOURCE
+LTC_CFLAGS += -I./src/headers/ -Wall -Wsign-compare -Wshadow -DLTC_SOURCE -DLTC_NO_PROTOTYPES -DLTC_NO_ASM
+# ifdef WIND_USR
+#   LTC_CFLAGS += -I$(subst /,\\,$(WIND_USR))/h
+# endif
 
 ifdef OLD_GCC
 LTC_CFLAGS += -W
