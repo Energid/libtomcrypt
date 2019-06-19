@@ -23,7 +23,9 @@ enum ltc_oid_id {
    PKA_RSA,
    PKA_DSA,
    PKA_EC,
-   PKA_EC_PRIMEF
+   PKA_EC_PRIMEF,
+   PKA_X25519,
+   PKA_ED25519,
 };
 
 /*
@@ -297,6 +299,33 @@ int dsa_int_validate_pqg(const dsa_key *key, int *stat);
 int dsa_int_validate_primes(const dsa_key *key, int *stat);
 #endif /* LTC_MDSA */
 
+
+#ifdef LTC_CURVE25519
+
+int tweetnacl_crypto_sign(
+  unsigned char *sm,unsigned long long *smlen,
+  const unsigned char *m,unsigned long long mlen,
+  const unsigned char *sk, const unsigned char *pk);
+int tweetnacl_crypto_sign_open(
+  int *stat,
+  unsigned char *m,unsigned long long *mlen,
+  const unsigned char *sm,unsigned long long smlen,
+  const unsigned char *pk);
+int tweetnacl_crypto_sign_keypair(prng_state *prng, int wprng, unsigned char *pk,unsigned char *sk);
+int tweetnacl_crypto_sk_to_pk(unsigned char *pk, const unsigned char *sk);
+int tweetnacl_crypto_scalarmult(unsigned char *q, const unsigned char *n, const unsigned char *p);
+int tweetnacl_crypto_scalarmult_base(unsigned char *q,const unsigned char *n);
+
+typedef int (*sk_to_pk)(unsigned char *pk ,const unsigned char *sk);
+int ec25519_import_pkcs8(const unsigned char *in, unsigned long inlen,
+                       const void *pwd, unsigned long pwdlen,
+                       enum ltc_oid_id id, sk_to_pk fp,
+                       curve25519_key *key);
+int ec25519_export(       unsigned char *out, unsigned long *outlen,
+                                    int  which,
+                   const curve25519_key *key);
+#endif /* LTC_CURVE25519 */
+
 #ifdef LTC_DER
 
 #define LTC_ASN1_IS_TYPE(e, t) (((e) != NULL) && ((e)->type == (t)))
@@ -329,6 +358,13 @@ int der_teletex_char_encode(int c);
 int der_teletex_value_decode(int v);
 
 int der_utf8_valid_char(const wchar_t c);
+
+typedef int (*public_key_decode_cb)(const unsigned char *in, unsigned long inlen, void *ctx);
+
+int x509_decode_public_key_from_certificate(const unsigned char *in, unsigned long inlen,
+                                            enum ltc_oid_id algorithm, ltc_asn1_type param_type,
+                                            ltc_asn1_list* parameters, unsigned long *parameters_len,
+                                            public_key_decode_cb callback, void *ctx);
 
 /* SUBJECT PUBLIC KEY INFO */
 int x509_encode_subject_public_key_info(unsigned char *out, unsigned long *outlen,

@@ -344,7 +344,8 @@ src/pk/asn1/der/utctime/der_decode_utctime.o src/pk/asn1/der/utctime/der_encode_
 src/pk/asn1/der/utctime/der_length_utctime.o src/pk/asn1/der/utf8/der_decode_utf8_string.o \
 src/pk/asn1/der/utf8/der_encode_utf8_string.o src/pk/asn1/der/utf8/der_length_utf8_string.o \
 src/pk/asn1/oid/pk_get_oid.o src/pk/asn1/oid/pk_oid_cmp.o src/pk/asn1/oid/pk_oid_str.o \
-src/pk/asn1/pkcs8/pkcs8_decode_flexi.o src/pk/asn1/x509/x509_decode_subject_public_key_info.o \
+src/pk/asn1/pkcs8/pkcs8_decode_flexi.o src/pk/asn1/x509/x509_decode_public_key_from_certificate.o \
+src/pk/asn1/x509/x509_decode_subject_public_key_info.o \
 src/pk/asn1/x509/x509_encode_subject_public_key_info.o src/pk/dh/dh.o src/pk/dh/dh_check_pubkey.o \
 src/pk/dh/dh_export.o src/pk/dh/dh_export_key.o src/pk/dh/dh_free.o src/pk/dh/dh_generate_key.o \
 src/pk/dh/dh_import.o src/pk/dh/dh_set.o src/pk/dh/dh_set_pg_dhparam.o src/pk/dh/dh_shared_secret.o \
@@ -352,7 +353,8 @@ src/pk/dsa/dsa_decrypt_key.o src/pk/dsa/dsa_encrypt_key.o src/pk/dsa/dsa_export.
 src/pk/dsa/dsa_generate_key.o src/pk/dsa/dsa_generate_pqg.o src/pk/dsa/dsa_import.o \
 src/pk/dsa/dsa_make_key.o src/pk/dsa/dsa_set.o src/pk/dsa/dsa_set_pqg_dsaparam.o \
 src/pk/dsa/dsa_shared_secret.o src/pk/dsa/dsa_sign_hash.o src/pk/dsa/dsa_verify_hash.o \
-src/pk/dsa/dsa_verify_key.o src/pk/ecc/ecc.o src/pk/ecc/ecc_ansi_x963_export.o \
+src/pk/dsa/dsa_verify_key.o src/pk/ec25519/ec25519_export.o src/pk/ec25519/ec25519_import_pkcs8.o \
+src/pk/ec25519/tweetnacl.o src/pk/ecc/ecc.o src/pk/ecc/ecc_ansi_x963_export.o \
 src/pk/ecc/ecc_ansi_x963_import.o src/pk/ecc/ecc_decrypt_key.o src/pk/ecc/ecc_encrypt_key.o \
 src/pk/ecc/ecc_export.o src/pk/ecc/ecc_export_openssl.o src/pk/ecc/ecc_find_curve.o \
 src/pk/ecc/ecc_free.o src/pk/ecc/ecc_get_key.o src/pk/ecc/ecc_get_oid_str.o src/pk/ecc/ecc_get_size.o \
@@ -360,41 +362,47 @@ src/pk/ecc/ecc_import.o src/pk/ecc/ecc_import_openssl.o src/pk/ecc/ecc_import_pk
 src/pk/ecc/ecc_import_x509.o src/pk/ecc/ecc_make_key.o src/pk/ecc/ecc_recover_key.o \
 src/pk/ecc/ecc_set_curve.o src/pk/ecc/ecc_set_curve_internal.o src/pk/ecc/ecc_set_key.o \
 src/pk/ecc/ecc_shared_secret.o src/pk/ecc/ecc_sign_hash.o src/pk/ecc/ecc_sizes.o \
-src/pk/ecc/ecc_ssh_ecdsa_encode_name.o src/pk/ecc/ecc_test.o src/pk/ecc/ecc_verify_hash.o \
-src/pk/ecc/ltc_ecc_export_point.o src/pk/ecc/ltc_ecc_import_point.o src/pk/ecc/ltc_ecc_is_point.o \
+src/pk/ecc/ecc_ssh_ecdsa_encode_name.o src/pk/ecc/ecc_verify_hash.o src/pk/ecc/ltc_ecc_export_point.o \
+src/pk/ecc/ltc_ecc_import_point.o src/pk/ecc/ltc_ecc_is_point.o \
 src/pk/ecc/ltc_ecc_is_point_at_infinity.o src/pk/ecc/ltc_ecc_map.o src/pk/ecc/ltc_ecc_mul2add.o \
 src/pk/ecc/ltc_ecc_mulmod.o src/pk/ecc/ltc_ecc_mulmod_timing.o src/pk/ecc/ltc_ecc_points.o \
 src/pk/ecc/ltc_ecc_projective_add_point.o src/pk/ecc/ltc_ecc_projective_dbl_point.o \
-src/pk/ecc/ltc_ecc_verify_key.o src/pk/pkcs1/pkcs_1_i2osp.o src/pk/pkcs1/pkcs_1_mgf1.o \
+src/pk/ecc/ltc_ecc_verify_key.o src/pk/ed25519/ed25519_export.o src/pk/ed25519/ed25519_import.o \
+src/pk/ed25519/ed25519_import_pkcs8.o src/pk/ed25519/ed25519_import_x509.o \
+src/pk/ed25519/ed25519_make_key.o src/pk/ed25519/ed25519_set_key.o src/pk/ed25519/ed25519_sign.o \
+src/pk/ed25519/ed25519_verify.o src/pk/pkcs1/pkcs_1_i2osp.o src/pk/pkcs1/pkcs_1_mgf1.o \
 src/pk/pkcs1/pkcs_1_oaep_decode.o src/pk/pkcs1/pkcs_1_oaep_encode.o src/pk/pkcs1/pkcs_1_os2ip.o \
 src/pk/pkcs1/pkcs_1_pss_decode.o src/pk/pkcs1/pkcs_1_pss_encode.o src/pk/pkcs1/pkcs_1_v1_5_decode.o \
 src/pk/pkcs1/pkcs_1_v1_5_encode.o src/pk/rsa/rsa_decrypt_key.o src/pk/rsa/rsa_encrypt_key.o \
 src/pk/rsa/rsa_export.o src/pk/rsa/rsa_exptmod.o src/pk/rsa/rsa_free.o src/pk/rsa/rsa_get_size.o \
 src/pk/rsa/rsa_import.o src/pk/rsa/rsa_import_pkcs8.o src/pk/rsa/rsa_import_x509.o \
 src/pk/rsa/rsa_make_key.o src/pk/rsa/rsa_set.o src/pk/rsa/rsa_sign_hash.o \
-src/pk/rsa/rsa_sign_saltlen_get.o src/pk/rsa/rsa_verify_hash.o src/prngs/chacha20.o src/prngs/fortuna.o \
-src/prngs/rc4.o src/prngs/rng_get_bytes.o src/prngs/rng_make_prng.o src/prngs/sober128.o \
-src/prngs/sprng.o src/prngs/yarrow.o src/stream/chacha/chacha_crypt.o src/stream/chacha/chacha_done.o \
-src/stream/chacha/chacha_ivctr32.o src/stream/chacha/chacha_ivctr64.o \
-src/stream/chacha/chacha_keystream.o src/stream/chacha/chacha_memory.o \
-src/stream/chacha/chacha_setup.o src/stream/chacha/chacha_test.o src/stream/rabbit/rabbit.o \
-src/stream/rabbit/rabbit_memory.o src/stream/rc4/rc4_stream.o src/stream/rc4/rc4_stream_memory.o \
-src/stream/rc4/rc4_test.o src/stream/salsa20/salsa20_crypt.o src/stream/salsa20/salsa20_done.o \
-src/stream/salsa20/salsa20_ivctr64.o src/stream/salsa20/salsa20_keystream.o \
-src/stream/salsa20/salsa20_memory.o src/stream/salsa20/salsa20_setup.o \
-src/stream/salsa20/salsa20_test.o src/stream/salsa20/xsalsa20_memory.o \
-src/stream/salsa20/xsalsa20_setup.o src/stream/salsa20/xsalsa20_test.o \
-src/stream/sober128/sober128_stream.o src/stream/sober128/sober128_stream_memory.o \
-src/stream/sober128/sober128_test.o src/stream/sosemanuk/sosemanuk.o \
-src/stream/sosemanuk/sosemanuk_memory.o src/stream/sosemanuk/sosemanuk_test.o
+src/pk/rsa/rsa_sign_saltlen_get.o src/pk/rsa/rsa_verify_hash.o src/pk/x25519/x25519_export.o \
+src/pk/x25519/x25519_import.o src/pk/x25519/x25519_import_pkcs8.o src/pk/x25519/x25519_import_x509.o \
+src/pk/x25519/x25519_make_key.o src/pk/x25519/x25519_set_key.o src/pk/x25519/x25519_shared_secret.o \
+src/prngs/chacha20.o src/prngs/fortuna.o src/prngs/rc4.o src/prngs/rng_get_bytes.o \
+src/prngs/rng_make_prng.o src/prngs/sober128.o src/prngs/sprng.o src/prngs/yarrow.o \
+src/stream/chacha/chacha_crypt.o src/stream/chacha/chacha_done.o src/stream/chacha/chacha_ivctr32.o \
+src/stream/chacha/chacha_ivctr64.o src/stream/chacha/chacha_keystream.o \
+src/stream/chacha/chacha_memory.o src/stream/chacha/chacha_setup.o src/stream/chacha/chacha_test.o \
+src/stream/rabbit/rabbit.o src/stream/rabbit/rabbit_memory.o src/stream/rc4/rc4_stream.o \
+src/stream/rc4/rc4_stream_memory.o src/stream/rc4/rc4_test.o src/stream/salsa20/salsa20_crypt.o \
+src/stream/salsa20/salsa20_done.o src/stream/salsa20/salsa20_ivctr64.o \
+src/stream/salsa20/salsa20_keystream.o src/stream/salsa20/salsa20_memory.o \
+src/stream/salsa20/salsa20_setup.o src/stream/salsa20/salsa20_test.o \
+src/stream/salsa20/xsalsa20_memory.o src/stream/salsa20/xsalsa20_setup.o \
+src/stream/salsa20/xsalsa20_test.o src/stream/sober128/sober128_stream.o \
+src/stream/sober128/sober128_stream_memory.o src/stream/sober128/sober128_test.o \
+src/stream/sosemanuk/sosemanuk.o src/stream/sosemanuk/sosemanuk_memory.o \
+src/stream/sosemanuk/sosemanuk_test.o
 
 # List of test objects to compile (all goes to libtomcrypt_prof.a)
 TOBJECTS=tests/base16_test.o tests/base32_test.o tests/base64_test.o tests/cipher_hash_test.o \
-tests/common.o tests/der_test.o tests/dh_test.o tests/dsa_test.o tests/ecc_test.o tests/file_test.o \
-tests/mac_test.o tests/misc_test.o tests/modes_test.o tests/mpi_test.o tests/multi_test.o tests/no_prng.o \
-tests/padding_test.o tests/pkcs_1_eme_test.o tests/pkcs_1_emsa_test.o tests/pkcs_1_oaep_test.o \
-tests/pkcs_1_pss_test.o tests/pkcs_1_test.o tests/prng_test.o tests/rotate_test.o tests/rsa_test.o \
-tests/ssh_test.o tests/store_test.o tests/test.o
+tests/common.o tests/der_test.o tests/dh_test.o tests/dsa_test.o tests/ecc_test.o tests/ed25519_test.o \
+tests/file_test.o tests/mac_test.o tests/misc_test.o tests/modes_test.o tests/mpi_test.o \
+tests/multi_test.o tests/no_prng.o tests/padding_test.o tests/pkcs_1_eme_test.o tests/pkcs_1_emsa_test.o \
+tests/pkcs_1_oaep_test.o tests/pkcs_1_pss_test.o tests/pkcs_1_test.o tests/prng_test.o \
+tests/rotate_test.o tests/rsa_test.o tests/ssh_test.o tests/store_test.o tests/test.o tests/x25519_test.o
 
 # The following headers will be installed by "make install"
 HEADERS_PUB=src/headers/tomcrypt.h src/headers/tomcrypt_argchk.h src/headers/tomcrypt_cfg.h \
@@ -408,11 +416,11 @@ HEADERS=$(HEADERS_PUB) src/headers/tomcrypt_private.h
 #These are the rules to make certain object files.
 src/ciphers/aes/aes.o: src/ciphers/aes/aes.c src/ciphers/aes/aes_tab.c
 src/ciphers/twofish/twofish.o: src/ciphers/twofish/twofish.c src/ciphers/twofish/twofish_tab.c
-src/hashes/whirl/whirl.o: src/hashes/whirl/whirl.c src/hashes/whirl/whirltab.c
-src/hashes/sha2/sha512.o: src/hashes/sha2/sha512.c src/hashes/sha2/sha384.c
+src/hashes/sha2/sha224.o: src/hashes/sha2/sha224.c src/hashes/sha2/sha256.c
+src/hashes/sha2/sha384.o: src/hashes/sha2/sha384.c src/hashes/sha2/sha512.c
 src/hashes/sha2/sha512_224.o: src/hashes/sha2/sha512.c src/hashes/sha2/sha512_224.c
 src/hashes/sha2/sha512_256.o: src/hashes/sha2/sha512.c src/hashes/sha2/sha512_256.c
-src/hashes/sha2/sha256.o: src/hashes/sha2/sha256.c src/hashes/sha2/sha224.c
+src/hashes/whirl/whirl.o: src/hashes/whirl/whirl.c src/hashes/whirl/whirltab.c
 
 $(DOBJECTS): LTC_CFLAGS := -Itests $(LTC_CFLAGS)
 $(TOBJECTS): LTC_CFLAGS := -Itests $(LTC_CFLAGS)

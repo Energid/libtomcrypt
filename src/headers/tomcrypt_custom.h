@@ -451,6 +451,9 @@
 /* Digital Signature Algorithm */
 #define LTC_MDSA
 
+/* Ed25519 & X25519 */
+#define LTC_CURVE25519
+
 /* ECC */
 #define LTC_MECC
 
@@ -574,7 +577,7 @@
    #endif
 #endif
 
-#if defined(LTC_MECC) || defined(LTC_MRSA) || defined(LTC_MDSA)
+#if defined(LTC_MECC) || defined(LTC_MRSA) || defined(LTC_MDSA) || defined(LTC_SSH)
    /* Include the MPI functionality?  (required by the PK algorithms) */
    #define LTC_MPI
 

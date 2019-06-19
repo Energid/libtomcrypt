@@ -32,7 +32,7 @@ int store_test(void);
 int rotate_test(void);
 int rsa_test(void);
 int dh_test(void);
-int ecc_tests(void);
+int ecc_test(void);
 int dsa_test(void);
 int der_test(void);
 int misc_test(void);
@@ -44,10 +44,9 @@ int multi_test(void);
 int prng_test(void);
 int mpi_test(void);
 int padding_test(void);
-
-#ifdef LTC_SSH
+int x25519_test(void);
+int ed25519_test(void);
 int ssh_test(void);
-#endif
 
 #ifdef LTC_PKCS_1
 struct ltc_prng_descriptor* no_prng_desc_get(void);
