@@ -5,20 +5,18 @@
  *
  * The library is free for all purposes without any express
  * guarantee it works.
- *
- * Tom St Denis, tomstdenis@gmail.com, http://libtom.org
  */
 #include "tomcrypt.h"
 
 /**
   @file rsa_import.c
-  Import a LTC_PKCS RSA key, Tom St Denis
-*/  
+  Import a PKCS RSA key, Tom St Denis
+*/
 
 #ifdef LTC_MRSA
 
 /**
-  Import an RSAPublicKey or RSAPrivateKey [two-prime only, only support >= 1024-bit keys, defined in LTC_PKCS #1 v2.1]
+  Import an RSAPublicKey or RSAPrivateKey [two-prime only, only support >= 1024-bit keys, defined in PKCS #1 v2.1]
   @param in      The packet to import from
   @param inlen   It's length (octets)
   @param key     [out] Destination for newly imported key
@@ -36,13 +34,13 @@ int rsa_import(const unsigned char *in, unsigned long inlen, rsa_key *key)
    LTC_ARGCHK(ltc_mp.name != NULL);
 
    /* init key */
-   if ((err = mp_init_multi(&key->e, &key->d, &key->N, &key->dQ, 
+   if ((err = mp_init_multi(&key->e, &key->d, &key->N, &key->dQ,
                             &key->dP, &key->qP, &key->p, &key->q, NULL)) != CRYPT_OK) {
       return err;
    }
 
    /* see if the OpenSSL DER format RSA public key will work */
-   tmpbuf_len = MAX_RSA_SIZE * 8;
+   tmpbuf_len = inlen;
    tmpbuf = XCALLOC(1, tmpbuf_len);
    if (tmpbuf == NULL) {
        err = CRYPT_MEM;
@@ -67,28 +65,29 @@ int rsa_import(const unsigned char *in, unsigned long inlen, rsa_key *key)
       goto LBL_FREE;
    }
 
-   /* not SSL public key, try to match against LTC_PKCS #1 standards */
-   if ((err = der_decode_sequence_multi(in, inlen, 
-                                  LTC_ASN1_INTEGER, 1UL, key->N, 
-                                  LTC_ASN1_EOL,     0UL, NULL)) != CRYPT_OK) {
+   /* not SSL public key, try to match against PKCS #1 standards */
+   err = der_decode_sequence_multi(in, inlen, LTC_ASN1_INTEGER, 1UL, key->N,
+                                              LTC_ASN1_EOL,     0UL, NULL);
+
+   if (err != CRYPT_OK && err != CRYPT_INPUT_TOO_LONG) {
       goto LBL_ERR;
    }
 
    if (mp_cmp_d(key->N, 0) == LTC_MP_EQ) {
-      if ((err = mp_init(&zero)) != CRYPT_OK) { 
+      if ((err = mp_init(&zero)) != CRYPT_OK) {
          goto LBL_ERR;
       }
       /* it's a private key */
-      if ((err = der_decode_sequence_multi(in, inlen, 
-                          LTC_ASN1_INTEGER, 1UL, zero, 
-                          LTC_ASN1_INTEGER, 1UL, key->N, 
+      if ((err = der_decode_sequence_multi(in, inlen,
+                          LTC_ASN1_INTEGER, 1UL, zero,
+                          LTC_ASN1_INTEGER, 1UL, key->N,
                           LTC_ASN1_INTEGER, 1UL, key->e,
-                          LTC_ASN1_INTEGER, 1UL, key->d, 
-                          LTC_ASN1_INTEGER, 1UL, key->p, 
-                          LTC_ASN1_INTEGER, 1UL, key->q, 
+                          LTC_ASN1_INTEGER, 1UL, key->d,
+                          LTC_ASN1_INTEGER, 1UL, key->p,
+                          LTC_ASN1_INTEGER, 1UL, key->q,
                           LTC_ASN1_INTEGER, 1UL, key->dP,
-                          LTC_ASN1_INTEGER, 1UL, key->dQ, 
-                          LTC_ASN1_INTEGER, 1UL, key->qP, 
+                          LTC_ASN1_INTEGER, 1UL, key->dQ,
+                          LTC_ASN1_INTEGER, 1UL, key->qP,
                           LTC_ASN1_EOL,     0UL, NULL)) != CRYPT_OK) {
          mp_clear(zero);
          goto LBL_ERR;
@@ -101,9 +100,9 @@ int rsa_import(const unsigned char *in, unsigned long inlen, rsa_key *key)
       goto LBL_ERR;
    } else {
       /* it's a public key and we lack e */
-      if ((err = der_decode_sequence_multi(in, inlen, 
-                                     LTC_ASN1_INTEGER, 1UL, key->N, 
-                                     LTC_ASN1_INTEGER, 1UL, key->e, 
+      if ((err = der_decode_sequence_multi(in, inlen,
+                                     LTC_ASN1_INTEGER, 1UL, key->N,
+                                     LTC_ASN1_INTEGER, 1UL, key->e,
                                      LTC_ASN1_EOL,     0UL, NULL)) != CRYPT_OK) {
          goto LBL_ERR;
       }
@@ -125,6 +124,6 @@ LBL_FREE:
 #endif /* LTC_MRSA */
 
 
-/* $Source$ */
-/* $Revision$ */
-/* $Date$ */
+/* ref:         $Format:%D$ */
+/* git commit:  $Format:%H$ */
+/* commit time: $Format:%ai$ */

@@ -5,8 +5,6 @@
  *
  * The library is free for all purposes without any express
  * guarantee it works.
- *
- * Tom St Denis, tomstdenis@gmail.com, http://libtom.org
  */
 #include "tomcrypt.h"
 
@@ -18,7 +16,8 @@
 
 #ifdef LTC_DER
 
-#define setbit(v, n)    (v=((unsigned char)(v) | (1U << (unsigned char)(n))))
+#define SETBIT(v, n)    (v=((unsigned char)(v) | (1U << (unsigned char)(n))))
+#define CLRBIT(v, n)    (v=((unsigned char)(v) & ~(1U << (unsigned char)(n))))
 
 /**
   Store a BIT STRING
@@ -47,8 +46,8 @@ int der_decode_raw_bit_string(const unsigned char *in,  unsigned long inlen,
       return CRYPT_INVALID_PACKET;
    }
 
-    /* offset in the data */
-    x = 1;
+   /* offset in the data */
+   x = 1;
 
    /* get the length of the data */
    if (in[x] & 0x80) {
@@ -86,12 +85,14 @@ int der_decode_raw_bit_string(const unsigned char *in,  unsigned long inlen,
 
    /* decode/store the bits */
    for (y = 0; y < blen; y++) {
-       if (in[x] & (1 << (7 - (y & 7)))) {
-          setbit(out[y/8], 7-(y%8));
-       }
-       if ((y & 7) == 7) {
-          ++x;
-       }
+      if (in[x] & (1 << (7 - (y & 7)))) {
+         SETBIT(out[y/8], 7-(y%8));
+      } else {
+         CLRBIT(out[y/8], 7-(y%8));
+      }
+      if ((y & 7) == 7) {
+         ++x;
+      }
    }
 
    /* we done */
@@ -101,6 +102,6 @@ int der_decode_raw_bit_string(const unsigned char *in,  unsigned long inlen,
 
 #endif
 
-/* $Source: /cvs/libtom/libtomcrypt/src/pk/asn1/der/bit/der_decode_bit_string.c,v $ */
-/* $Revision: 1.5 $ */
-/* $Date: 2006/12/28 01:27:24 $ */
+/* ref:         $Format:%D$ */
+/* git commit:  $Format:%H$ */
+/* commit time: $Format:%ai$ */

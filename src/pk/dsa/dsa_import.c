@@ -5,8 +5,6 @@
  *
  * The library is free for all purposes without any express
  * guarantee it works.
- *
- * Tom St Denis, tomstdenis@gmail.com, http://libtom.org
  */
 #include "tomcrypt.h"
 
@@ -18,7 +16,7 @@
 #ifdef LTC_MDSA
 
 /**
-   Import a DSA key 
+   Import a DSA key
    @param in       The binary packet to import from
    @param inlen    The length of the binary packet
    @param key      [out] Where to store the imported key
@@ -26,9 +24,10 @@
 */
 int dsa_import(const unsigned char *in, unsigned long inlen, dsa_key *key)
 {
-   int           err;
+   int           err, stat;
    unsigned long zero = 0;
    unsigned char* tmpbuf = NULL;
+   unsigned char flags[1];
 
    LTC_ARGCHK(in  != NULL);
    LTC_ARGCHK(key != NULL);
@@ -39,6 +38,45 @@ int dsa_import(const unsigned char *in, unsigned long inlen, dsa_key *key)
       return CRYPT_MEM;
    }
 
+   /* try to match the old libtomcrypt format */
+   err = der_decode_sequence_multi(in, inlen, LTC_ASN1_BIT_STRING, 1UL, flags,
+                                              LTC_ASN1_EOL,        0UL, NULL);
+
+   if (err == CRYPT_OK || err == CRYPT_INPUT_TOO_LONG) {
+       /* private key */
+       if (flags[0] == 1) {
+           if ((err = der_decode_sequence_multi(in, inlen,
+                                  LTC_ASN1_BIT_STRING,   1UL, flags,
+                                  LTC_ASN1_INTEGER,      1UL, key->g,
+                                  LTC_ASN1_INTEGER,      1UL, key->p,
+                                  LTC_ASN1_INTEGER,      1UL, key->q,
+                                  LTC_ASN1_INTEGER,      1UL, key->y,
+                                  LTC_ASN1_INTEGER,      1UL, key->x,
+                                  LTC_ASN1_EOL,          0UL, NULL)) != CRYPT_OK) {
+               goto LBL_ERR;
+           }
+           key->type = PK_PRIVATE;
+           goto LBL_OK;
+       }
+       /* public key */
+       else if (flags[0] == 0) {
+           if ((err = der_decode_sequence_multi(in, inlen,
+                                      LTC_ASN1_BIT_STRING,   1UL, flags,
+                                      LTC_ASN1_INTEGER,      1UL, key->g,
+                                      LTC_ASN1_INTEGER,      1UL, key->p,
+                                      LTC_ASN1_INTEGER,      1UL, key->q,
+                                      LTC_ASN1_INTEGER,      1UL, key->y,
+                                      LTC_ASN1_EOL,          0UL, NULL)) != CRYPT_OK) {
+               goto LBL_ERR;
+           }
+           key->type = PK_PUBLIC;
+           goto LBL_OK;
+       }
+       else {
+          err = CRYPT_INVALID_PACKET;
+          goto LBL_ERR;
+       }
+   }
    /* get key type */
    if ((err = der_decode_sequence_multi(in, inlen,
                           LTC_ASN1_SHORT_INTEGER, 1UL, &zero,
@@ -52,7 +90,7 @@ int dsa_import(const unsigned char *in, unsigned long inlen, dsa_key *key)
        key->type = PK_PRIVATE;
    } else { /* public */
       ltc_asn1_list params[3];
-      unsigned long tmpbuf_len = MAX_RSA_SIZE*8;
+      unsigned long tmpbuf_len = inlen;
 
       LTC_SET_ASN1(params, 0, LTC_ASN1_INTEGER, key->p, 1UL);
       LTC_SET_ASN1(params, 1, LTC_ASN1_INTEGER, key->q, 1UL);
@@ -60,41 +98,55 @@ int dsa_import(const unsigned char *in, unsigned long inlen, dsa_key *key)
 
       tmpbuf = XCALLOC(1, tmpbuf_len);
       if (tmpbuf == NULL) {
-          err = CRYPT_MEM;
-          goto LBL_ERR;
+         err = CRYPT_MEM;
+         goto LBL_ERR;
       }
 
-      err = der_decode_subject_public_key_info(in, inlen,
-        PKA_DSA, tmpbuf, &tmpbuf_len,
-        LTC_ASN1_SEQUENCE, params, 3);
+      err = der_decode_subject_public_key_info(in, inlen, PKA_DSA,
+                                               tmpbuf, &tmpbuf_len,
+                                               LTC_ASN1_SEQUENCE, params, 3);
       if (err != CRYPT_OK) {
+         XFREE(tmpbuf);
          goto LBL_ERR;
       }
 
       if ((err=der_decode_integer(tmpbuf, tmpbuf_len, key->y)) != CRYPT_OK) {
+         XFREE(tmpbuf);
          goto LBL_ERR;
       }
 
       XFREE(tmpbuf);
       key->type = PK_PUBLIC;
-  }
-  key->qord = mp_unsigned_bin_size(key->q);
+   }
 
-  if (key->qord >= LTC_MDSA_MAX_GROUP || key->qord <= 15 ||
-      (unsigned long)key->qord >= mp_unsigned_bin_size(key->p) || (mp_unsigned_bin_size(key->p) - key->qord) >= LTC_MDSA_DELTA) {
+LBL_OK:
+   key->qord = mp_unsigned_bin_size(key->q);
+
+   /* quick p, q, g validation, without primality testing */
+   if ((err = dsa_int_validate_pqg(key, &stat)) != CRYPT_OK) {
+      goto LBL_ERR;
+   }
+   if (stat == 0) {
+      err = CRYPT_INVALID_PACKET;
+      goto LBL_ERR;
+   }
+   /* validate x, y */
+   if ((err = dsa_int_validate_xy(key, &stat)) != CRYPT_OK) {
+      goto LBL_ERR;
+   }
+   if (stat == 0) {
       err = CRYPT_INVALID_PACKET;
       goto LBL_ERR;
    }
 
   return CRYPT_OK;
 LBL_ERR:
-   XFREE(tmpbuf);
-   mp_clear_multi(key->p, key->g, key->q, key->x, key->y, NULL);
+   dsa_free(key);
    return err;
 }
 
 #endif
 
-/* $Source$ */
-/* $Revision$ */
-/* $Date$ */
+/* ref:         $Format:%D$ */
+/* git commit:  $Format:%H$ */
+/* commit time: $Format:%ai$ */
