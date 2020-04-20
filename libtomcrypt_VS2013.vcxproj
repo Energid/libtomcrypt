@@ -252,7 +252,6 @@
     <ClCompile Include="src\ciphers\camellia.c" />
     <ClCompile Include="src\ciphers\cast5.c" />
     <ClCompile Include="src\ciphers\des.c" />
-    <ClCompile Include="src\ciphers\idea.c" />
     <ClCompile Include="src\ciphers\kasumi.c" />
     <ClCompile Include="src\ciphers\khazad.c" />
     <ClCompile Include="src\ciphers\kseed.c" />
@@ -269,7 +268,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\ciphers\serpent.c" />
     <ClCompile Include="src\ciphers\skipjack.c" />
     <ClCompile Include="src\ciphers\twofish\twofish.c" />
     <ClCompile Include="src\ciphers\twofish\twofish_tab.c">
@@ -432,15 +430,10 @@
     <ClCompile Include="src\math\rand_prime.c" />
     <ClCompile Include="src\math\tfm_desc.c" />
     <ClCompile Include="src\misc\adler32.c" />
-    <ClCompile Include="src\misc\base16\base16_decode.c" />
-    <ClCompile Include="src\misc\base16\base16_encode.c" />
-    <ClCompile Include="src\misc\base32\base32_decode.c" />
-    <ClCompile Include="src\misc\base32\base32_encode.c" />
     <ClCompile Include="src\misc\base64\base64_decode.c" />
     <ClCompile Include="src\misc\base64\base64_encode.c" />
     <ClCompile Include="src\misc\burn_stack.c" />
     <ClCompile Include="src\misc\compare_testvector.c" />
-    <ClCompile Include="src\misc\copy_or_zeromem.c" />
     <ClCompile Include="src\misc\crc32.c" />
     <ClCompile Include="src\misc\crypt\crypt.c" />
     <ClCompile Include="src\misc\crypt\crypt_argchk.c" />
@@ -477,8 +470,6 @@
     <ClCompile Include="src\misc\hkdf\hkdf.c" />
     <ClCompile Include="src\misc\hkdf\hkdf_test.c" />
     <ClCompile Include="src\misc\mem_neq.c" />
-    <ClCompile Include="src\misc\padding\padding_depad.c" />
-    <ClCompile Include="src\misc\padding\padding_pad.c" />
     <ClCompile Include="src\misc\pkcs5\pkcs_5_1.c" />
     <ClCompile Include="src\misc\pkcs5\pkcs_5_2.c" />
     <ClCompile Include="src\misc\pkcs5\pkcs_5_test.c" />
@@ -543,19 +534,9 @@
     <ClCompile Include="src\pk\asn1\der\boolean\der_encode_boolean.c" />
     <ClCompile Include="src\pk\asn1\der\boolean\der_length_boolean.c" />
     <ClCompile Include="src\pk\asn1\der\choice\der_decode_choice.c" />
-    <ClCompile Include="src\pk\asn1\der\custom_type\der_decode_custom_type.c" />
-    <ClCompile Include="src\pk\asn1\der\custom_type\der_encode_custom_type.c" />
-    <ClCompile Include="src\pk\asn1\der\custom_type\der_length_custom_type.c" />
     <ClCompile Include="src\pk\asn1\der\generalizedtime\der_decode_generalizedtime.c" />
     <ClCompile Include="src\pk\asn1\der\generalizedtime\der_encode_generalizedtime.c" />
     <ClCompile Include="src\pk\asn1\der\generalizedtime\der_length_generalizedtime.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_asn1_maps.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_decode_asn1_identifier.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_decode_asn1_length.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_encode_asn1_identifier.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_encode_asn1_length.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_length_asn1_identifier.c" />
-    <ClCompile Include="src\pk\asn1\der\general\der_length_asn1_length.c" />
     <ClCompile Include="src\pk\asn1\der\ia5\der_decode_ia5_string.c" />
     <ClCompile Include="src\pk\asn1\der\ia5\der_encode_ia5_string.c" />
     <ClCompile Include="src\pk\asn1\der\ia5\der_length_ia5_string.c" />
@@ -574,8 +555,10 @@
     <ClCompile Include="src\pk\asn1\der\sequence\der_decode_sequence_ex.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_decode_sequence_flexi.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_decode_sequence_multi.c" />
+    <ClCompile Include="src\pk\asn1\der\sequence\der_decode_subject_public_key_info.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_encode_sequence_ex.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_encode_sequence_multi.c" />
+    <ClCompile Include="src\pk\asn1\der\sequence\der_encode_subject_public_key_info.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_length_sequence.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_sequence_free.c" />
     <ClCompile Include="src\pk\asn1\der\sequence\der_sequence_shrink.c" />
@@ -592,8 +575,6 @@
     <ClCompile Include="src\pk\asn1\der\utf8\der_decode_utf8_string.c" />
     <ClCompile Include="src\pk\asn1\der\utf8\der_encode_utf8_string.c" />
     <ClCompile Include="src\pk\asn1\der\utf8\der_length_utf8_string.c" />
-    <ClCompile Include="src\pk\asn1\x509\x509_decode_subject_public_key_info.c" />
-    <ClCompile Include="src\pk\asn1\x509\x509_encode_subject_public_key_info.c" />
     <ClCompile Include="src\pk\dh\dh.c" />
     <ClCompile Include="src\pk\dh\dh_check_pubkey.c" />
     <ClCompile Include="src\pk\dh\dh_export.c" />
@@ -686,15 +667,8 @@
     <ClCompile Include="src\stream\chacha\chacha_keystream.c" />
     <ClCompile Include="src\stream\chacha\chacha_setup.c" />
     <ClCompile Include="src\stream\chacha\chacha_test.c" />
-    <ClCompile Include="src\stream\rabbit\rabbit.c" />
     <ClCompile Include="src\stream\rc4\rc4_stream.c" />
     <ClCompile Include="src\stream\rc4\rc4_test.c" />
-    <ClCompile Include="src\stream\salsa20\salsa20_crypt.c" />
-    <ClCompile Include="src\stream\salsa20\salsa20_done.c" />
-    <ClCompile Include="src\stream\salsa20\salsa20_ivctr64.c" />
-    <ClCompile Include="src\stream\salsa20\salsa20_keystream.c" />
-    <ClCompile Include="src\stream\salsa20\salsa20_setup.c" />
-    <ClCompile Include="src\stream\salsa20\salsa20_test.c" />
     <ClCompile Include="src\stream\sober128\sober128tab.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -703,8 +677,6 @@
     </ClCompile>
     <ClCompile Include="src\stream\sober128\sober128_stream.c" />
     <ClCompile Include="src\stream\sober128\sober128_test.c" />
-    <ClCompile Include="src\stream\sosemanuk\sosemanuk.c" />
-    <ClCompile Include="src\stream\sosemanuk\sosemanuk_test.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\tomcrypt.h" />
